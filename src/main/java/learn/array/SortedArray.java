@@ -1,7 +1,5 @@
 package learn.array;
 
-import java.util.Iterator;
-
 public class SortedArray<T extends Comparable<T>> implements Array<T> {
 
     private int size = 0;
@@ -11,9 +9,15 @@ public class SortedArray<T extends Comparable<T>> implements Array<T> {
         this.array = (T[]) new Comparable[capacity];
     }
 
-    // [] => add 10 => [10]
-    // [10] + 9 =>
-    //  10 > 9 => [9, 10]
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public int capacity() {
+        return array.length;
+    }
 
     @Override
     public void add(T input) {
@@ -68,28 +72,6 @@ public class SortedArray<T extends Comparable<T>> implements Array<T> {
         }
         --size;
         return true;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return new Iterator<>() {
-            private int index = 0;
-
-            @Override
-            public boolean hasNext() {
-                return index < size;
-            }
-
-            @Override
-            public T next() {
-                return array[index++];
-            }
-        };
     }
 
     @Override

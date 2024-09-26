@@ -1,14 +1,18 @@
 package learn.array;
 
-public class UnsortedArray<T extends Comparable<T>> implements Array<T> {
+public class DynamicArray<T extends Comparable<T>> implements Array<T> {
 
-    private int size = 0;
+    private final int scaleFactor = 2;
+    private final int downScaleThresholdFactor = 4;
+
     private Object[] array;
+    private int size;
 
-    public UnsortedArray(int capacity) {
-        this.array = new Object[capacity];
+    public DynamicArray(int initialCapacity) {
+        this.array = new Object[initialCapacity];
     }
 
+    @Override
     public int size() {
         return size;
     }
@@ -21,14 +25,14 @@ public class UnsortedArray<T extends Comparable<T>> implements Array<T> {
     @Override
     public void add(T input) {
         if (size == array.length) {
-            throw new IndexOutOfBoundsException("Array is full [size=%s]".formatted(size));
+            grow();
         }
         array[size++] = input;
     }
 
     @Override
     public int indexOf(T target) {
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; ++i) {
             if (array[i].equals(target)) {
                 return i;
             }
@@ -42,11 +46,13 @@ public class UnsortedArray<T extends Comparable<T>> implements Array<T> {
         if (index == -1) {
             return false;
         }
-        for (int i = index; i < size - 1; i++) {
+        for (int i = index; i < size - 1; ++i) {
             array[i] = array[i + 1];
         }
-        array[size - 1] = null;
-        --size;
+        array[--size] = null;
+        if (size <= capacity() / downScaleThresholdFactor) {
+            shrink();
+        }
         return true;
     }
 
@@ -64,5 +70,21 @@ public class UnsortedArray<T extends Comparable<T>> implements Array<T> {
         }
         result.append(array[size - 1]).append("]");
         return result.toString();
+    }
+
+    private void grow() {
+        Object[] grownArray = new Object[size * scaleFactor];
+        for (int i = 0; i < size; i++) {
+            grownArray[i] = array[i];
+        }
+        array = grownArray;
+    }
+
+    private void shrink() {
+        Object[] downsizedArray = new Object[capacity() / scaleFactor];
+        for (int i = 0; i < size; ++i) {
+            downsizedArray[i] = array[i];
+        }
+        array = downsizedArray;
     }
 }
