@@ -11,3 +11,4 @@ Implementations of the following data structures are present:
 ## List
 
 1. [Singly linked list](src/main/java/learn/list/SinglyLinkedList.java)
+2. [Doubly linked list](src/main/java/learn/list/DoublyLinkedList.java)

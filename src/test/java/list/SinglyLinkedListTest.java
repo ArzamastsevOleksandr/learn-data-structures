@@ -27,7 +27,7 @@ class SinglyLinkedListTest {
         return Stream.of(
                 of(new int[]{1, 1, 2, 3, 4, 4, 5}, "[1, 1, 2, 3, 4, 4, 5]", 7),
                 of(new int[]{10, 9, 8}, "[10, 9, 8]", 3),
-                of(new int[]{99}, "[99]", 7)
+                of(new int[]{99}, "[99]", 1)
         );
     }
 
