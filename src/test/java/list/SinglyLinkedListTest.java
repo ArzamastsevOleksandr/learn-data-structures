@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
@@ -53,6 +54,25 @@ class SinglyLinkedListTest {
                 of(new int[]{11, 22, 33}, "[11, 22, 33]", 3, 11, "[22, 33]", 2),
                 of(new int[]{11, 22, 33}, "[11, 22, 33]", 3, 33, "[11, 22]", 2),
                 of(new int[]{99}, "[99]", 1, 99, "[]", 0)
+        );
+    }
+
+    public static Stream<Arguments> sourceAndGetTargetByIndex() {
+        return Stream.of(
+                of(new int[]{10, 20, 30, 40, 50}, 0, 10),
+                of(new int[]{10, 20, 30, 40, 50}, 1, 20),
+                of(new int[]{10, 20, 30, 40, 50}, 2, 30),
+                of(new int[]{10, 20, 30, 40, 50}, 3, 40),
+                of(new int[]{10, 20, 30, 40, 50}, 4, 50)
+        );
+    }
+
+    public static Stream<Arguments> sourceAndWrongIndex() {
+        return Stream.of(
+                of(new int[]{10, 20, 30, 40, 50}, -2),
+                of(new int[]{10, 20, 30, 40, 50}, -1),
+                of(new int[]{10, 20, 30, 40, 50}, 5),
+                of(new int[]{10, 20, 30, 40, 50}, 6)
         );
     }
 
@@ -124,6 +144,28 @@ class SinglyLinkedListTest {
 
         assertThat(singlyLinkedList.toString()).isEqualTo(expectedString);
         assertThat(singlyLinkedList.size()).isEqualTo(expectedSize);
+    }
+
+    @ParameterizedTest
+    @MethodSource("sourceAndGetTargetByIndex")
+    void getElementByIndex(int[] source, int index, int expectedData) {
+        for (int element : source) {
+            singlyLinkedList.addLast(element);
+        }
+
+        assertThat(singlyLinkedList.get(index)).isEqualTo(expectedData);
+    }
+
+    @ParameterizedTest
+    @MethodSource("sourceAndWrongIndex")
+    void indexOutOfBoundsWhenGetInvokedWithWrongIndex(int[] source, int wrongIndex) {
+        for (int element : source) {
+            singlyLinkedList.addLast(element);
+        }
+
+        assertThatThrownBy(() -> singlyLinkedList.get(wrongIndex))
+                .isInstanceOf(IndexOutOfBoundsException.class)
+                .hasMessage("Index must be between 0 and " + (source.length - 1) + ", got: " + wrongIndex);
     }
 
 }

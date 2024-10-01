@@ -5,3 +5,5 @@ todo: check behavior with null values
 todo: more test cases with edge cases (expose methods first(), last())
 todo: circular array
 todo: circular list
+todo: implement list.get as a default method?
+todo: do not return the <T> from get, return a copy?

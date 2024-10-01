@@ -76,6 +76,18 @@ public class SinglyLinkedList<T> implements List<T> {
         return false;
     }
 
+    @Override
+    public T get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index must be between 0 and " + (size - 1) + ", got: " + index);
+        }
+        SLLNode<T> current = head;
+        for (int i = 0; i < index; ++i) {
+            current = current.next;
+        }
+        return current.data();
+    }
+
     private SLLNode<T> findLast() {
         if (head == null) {
             return null;
@@ -116,10 +128,6 @@ public class SinglyLinkedList<T> implements List<T> {
         public SLLNode(T data, SLLNode<T> next) {
             this.data = data;
             this.next = next;
-        }
-
-        public SLLNode(T data) {
-            this(data, null);
         }
 
         public boolean hasNext() {

@@ -99,6 +99,18 @@ public class DoublyLinkedList<T> implements List<T> {
     }
 
     @Override
+    public T get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index must be between 0 and " + (size - 1) + ", got: " + index);
+        }
+        DLLNode<T> current = head;
+        for (int i = 0; i < index; ++i) {
+            current = current.next;
+        }
+        return current.data();
+    }
+
+    @Override
     public int size() {
         return size;
     }

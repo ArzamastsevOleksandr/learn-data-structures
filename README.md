@@ -12,3 +12,7 @@ Implementations of the following data structures are present:
 
 1. [Singly linked list](src/main/java/learn/list/SinglyLinkedList.java)
 2. [Doubly linked list](src/main/java/learn/list/DoublyLinkedList.java)
+
+## Stack
+
+1. [Linked list based stack](src/main/java/learn/stack/LLStack.java)

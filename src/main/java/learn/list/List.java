@@ -12,6 +12,8 @@ public interface List<T> {
 
     boolean remove(T target);
 
+    T get(int index);
+
     int size();
 
 }
