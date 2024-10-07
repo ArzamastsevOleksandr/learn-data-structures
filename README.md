@@ -20,3 +20,4 @@ Implementations of the following data structures are present:
 ## Queue
 
 1. [Linked list based queue](src/main/java/learn/queue/LLQueue.java)
+2. [Circular array based queue](src/main/java/learn/queue/CircularArrayQueue.java)
