@@ -26,24 +26,26 @@ public class SinglyLinkedList<T> implements List<T> {
     }
 
     @Override
-    public boolean removeFirst() {
+    public T removeFirst() {
         if (size == 0) {
-            return false;
+            throw new IllegalStateException("removeFirst() invoked on an empty list");
         }
+        T firstElement = head.data();
         head = head.next;
         --size;
-        return true;
+        return firstElement;
     }
 
     @Override
-    public boolean removeLast() {
+    public T removeLast() {
         if (size == 0) {
-            return false;
+            throw new IllegalStateException("removeLast() invoked on an empty list");
         }
         if (size == 1) {
+            T lastElement = head.data();
             head = null;
             --size;
-            return true;
+            return lastElement;
         }
         SLLNode<T> prev = head;
         SLLNode<T> current = head.next();
@@ -51,9 +53,10 @@ public class SinglyLinkedList<T> implements List<T> {
             prev = current;
             current = current.next();
         }
+        T lastElement = current.data();
         prev.append(null);
         --size;
-        return true;
+        return lastElement;
     }
 
     @Override

@@ -33,35 +33,39 @@ public class DoublyLinkedList<T> implements List<T> {
     }
 
     @Override
-    public boolean removeFirst() {
+    public T removeFirst() {
         if (size == 0) {
-            return false;
+            throw new IllegalStateException("removeFirst() invoked on an empty list");
         }
         if (size == 1) {
+            T firstElement = head.data();
             head = tail = null;
             --size;
-            return true;
+            return firstElement;
         }
+        T firstElement = head.data();
         head = head.next();
         head.prev = null;
         --size;
-        return true;
+        return firstElement;
     }
 
     @Override
-    public boolean removeLast() {
+    public T removeLast() {
         if (size == 0) {
-            return false;
+            throw new IllegalStateException("removeLast() invoked on an empty list");
         }
         if (size == 1) {
+            T lastElement = tail.data();
             head = tail = null;
             --size;
-            return true;
+            return lastElement;
         }
+        T lastElement = tail.data();
         tail = tail.prev();
         tail.next = null;
         --size;
-        return true;
+        return lastElement;
     }
 
     @Override

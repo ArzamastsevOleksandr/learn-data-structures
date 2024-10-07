@@ -1,6 +1,7 @@
 package list;
 
 import learn.list.SinglyLinkedList;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -34,26 +35,28 @@ class SinglyLinkedListTest {
 
     public static Stream<Arguments> sourceAndRemoveFirstAndResults() {
         return Stream.of(
-                of(new int[]{10, 20, 30}, "[30, 20, 10]", 3, "[20, 10]", 2),
-                of(new int[]{10, 9}, "[9, 10]", 2, "[10]", 1),
-                of(new int[]{99}, "[99]", 1, "[]", 0)
+                of(new int[]{10, 20, 30}, "[30, 20, 10]", 3, 30, "[20, 10]", 2),
+                of(new int[]{10, 9}, "[9, 10]", 2, 9, "[10]", 1),
+                of(new int[]{99}, "[99]", 1, 99, "[]", 0)
         );
     }
 
     public static Stream<Arguments> sourceAndRemoveLastAndResults() {
         return Stream.of(
-                of(new int[]{10, 20, 30}, "[10, 20, 30]", 3, "[10, 20]", 2),
-                of(new int[]{11, 22}, "[11, 22]", 2, "[11]", 1),
-                of(new int[]{99}, "[99]", 1, "[]", 0)
+                of(new int[]{10, 20, 30}, "[10, 20, 30]", 3, 30, "[10, 20]", 2),
+                of(new int[]{11, 22}, "[11, 22]", 2, 22, "[11]", 1),
+                of(new int[]{99}, "[99]", 1, 99, "[]", 0)
         );
     }
 
     public static Stream<Arguments> sourceAndRemovableAndResults() {
         return Stream.of(
-                of(new int[]{10, 20, 30, 3, 4, 5}, "[10, 20, 30, 3, 4, 5]", 6, 30, "[10, 20, 3, 4, 5]", 5),
-                of(new int[]{11, 22, 33}, "[11, 22, 33]", 3, 11, "[22, 33]", 2),
-                of(new int[]{11, 22, 33}, "[11, 22, 33]", 3, 33, "[11, 22]", 2),
-                of(new int[]{99}, "[99]", 1, 99, "[]", 0)
+                of(new int[]{10, 20, 30, 3, 4, 5}, "[10, 20, 30, 3, 4, 5]", 6, 30, "[10, 20, 3, 4, 5]", 5, true),
+                of(new int[]{11, 22, 33}, "[11, 22, 33]", 3, 11, "[22, 33]", 2, true),
+                of(new int[]{11, 22, 33}, "[11, 22, 33]", 3, 33, "[11, 22]", 2, true),
+                of(new int[]{11, 22, 33}, "[11, 22, 33]", 3, 44, "[11, 22, 33]", 3, false),
+                of(new int[]{99}, "[99]", 1, 99, "[]", 0, true),
+                of(new int[]{}, "[]", 0, 99, "[]", 0, false)
         );
     }
 
@@ -100,7 +103,7 @@ class SinglyLinkedListTest {
 
     @ParameterizedTest
     @MethodSource("sourceAndRemoveFirstAndResults")
-    void firstElementIsRemoved(int[] source, String initialString, int initialSize, String expectedString, int expectedSize) {
+    void firstElementIsRemoved(int[] source, String initialString, int initialSize, int removedItem, String expectedString, int expectedSize) {
         for (int element : source) {
             singlyLinkedList.addFirst(element);
         }
@@ -108,7 +111,7 @@ class SinglyLinkedListTest {
         assertThat(singlyLinkedList.toString()).isEqualTo(initialString);
         assertThat(singlyLinkedList.size()).isEqualTo(initialSize);
 
-        singlyLinkedList.removeFirst();
+        assertThat(singlyLinkedList.removeFirst()).isEqualTo(removedItem);
 
         assertThat(singlyLinkedList.toString()).isEqualTo(expectedString);
         assertThat(singlyLinkedList.size()).isEqualTo(expectedSize);
@@ -116,7 +119,7 @@ class SinglyLinkedListTest {
 
     @ParameterizedTest
     @MethodSource("sourceAndRemoveLastAndResults")
-    void lastElementIsRemoved(int[] source, String initialString, int initialSize, String expectedString, int expectedSize) {
+    void lastElementIsRemoved(int[] source, String initialString, int initialSize, int removedItem, String expectedString, int expectedSize) {
         for (int element : source) {
             singlyLinkedList.addLast(element);
         }
@@ -124,7 +127,7 @@ class SinglyLinkedListTest {
         assertThat(singlyLinkedList.toString()).isEqualTo(initialString);
         assertThat(singlyLinkedList.size()).isEqualTo(initialSize);
 
-        singlyLinkedList.removeLast();
+        assertThat(singlyLinkedList.removeLast()).isEqualTo(removedItem);
 
         assertThat(singlyLinkedList.toString()).isEqualTo(expectedString);
         assertThat(singlyLinkedList.size()).isEqualTo(expectedSize);
@@ -132,7 +135,7 @@ class SinglyLinkedListTest {
 
     @ParameterizedTest
     @MethodSource("sourceAndRemovableAndResults")
-    void elementIsRemoved(int[] source, String initialString, int initialSize, int removable, String expectedString, int expectedSize) {
+    void elementIsRemoved(int[] source, String initialString, int initialSize, int removable, String expectedString, int expectedSize, boolean success) {
         for (int element : source) {
             singlyLinkedList.addLast(element);
         }
@@ -140,7 +143,7 @@ class SinglyLinkedListTest {
         assertThat(singlyLinkedList.toString()).isEqualTo(initialString);
         assertThat(singlyLinkedList.size()).isEqualTo(initialSize);
 
-        singlyLinkedList.remove(removable);
+        assertThat(singlyLinkedList.remove(removable)).isEqualTo(success);
 
         assertThat(singlyLinkedList.toString()).isEqualTo(expectedString);
         assertThat(singlyLinkedList.size()).isEqualTo(expectedSize);
@@ -168,4 +171,18 @@ class SinglyLinkedListTest {
                 .hasMessage("Index must be between 0 and " + (source.length - 1) + ", got: " + wrongIndex);
     }
 
+    @Test
+    void removeFirstOnEmptyListThrowsException() {
+        assertThatThrownBy(() -> singlyLinkedList.removeFirst())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("removeFirst() invoked on an empty list");
+    }
+
+    @Test
+    void removeLastOnEmptyListThrowsException() {
+        assertThatThrownBy(() -> singlyLinkedList.removeLast())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("removeLast() invoked on an empty list");
+
+    }
 }

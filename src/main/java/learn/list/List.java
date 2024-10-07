@@ -6,14 +6,18 @@ public interface List<T> {
 
     void addLast(T input);
 
-    boolean removeFirst();
+    T removeFirst();
 
-    boolean removeLast();
+    T removeLast();
 
     boolean remove(T target);
 
     T get(int index);
 
     int size();
+
+    default boolean isEmpty() {
+        return size() == 0;
+    }
 
 }
