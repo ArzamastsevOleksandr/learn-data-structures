@@ -2,7 +2,6 @@ package array;
 
 import learn.array.Array;
 import learn.array.UnsortedArray;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,7 +17,7 @@ public class UnsortedArrayTest {
 
     private final int capacity = 8;
 
-    private Array<Integer> unsortedArray;
+    private final Array<Integer> unsortedArray = new UnsortedArray<>(capacity);
 
     public static Stream<Arguments> sourceAndResults() {
         return Stream.of(
@@ -53,9 +52,27 @@ public class UnsortedArrayTest {
         );
     }
 
-    @BeforeEach
-    void setUp() {
-        unsortedArray = new UnsortedArray<>(capacity);
+    public static Stream<Arguments> sourceAndGetByIndex() {
+        return Stream.of(
+                of(new int[]{1, 2, 3, 4, 5, 6}, 0, 1),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 1, 2),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 2, 3),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 3, 4),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 4, 5),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 5, 6)
+        );
+    }
+
+    public static Stream<Arguments> sourceAndGetByWrongIndex() {
+        return Stream.of(
+                of(new int[]{1, 2, 3, 4, 5, 6}, -1),
+                of(new int[]{1, 2, 3, 4, 5, 6}, -2),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 7),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 8),
+                of(new int[]{}, 1),
+                of(new int[]{}, 0),
+                of(new int[]{}, -1)
+        );
     }
 
     @ParameterizedTest
@@ -100,5 +117,27 @@ public class UnsortedArrayTest {
 
         assertThat(unsortedArray.toString()).isEqualTo(expectedToStringValue);
         assertThat(unsortedArray.size()).isEqualTo(expectedSize);
+    }
+
+    @ParameterizedTest
+    @MethodSource("sourceAndGetByIndex")
+    void getByIndex(int[] source, int index, int expectedValue) {
+        for (int element : source) {
+            unsortedArray.add(element);
+        }
+
+        assertThat(unsortedArray.get(index)).isEqualTo(expectedValue);
+    }
+
+    @ParameterizedTest
+    @MethodSource("sourceAndGetByWrongIndex")
+    void getByIndexThrowsExceptionWhenIndexIsOutOfBounds(int[] source, int index) {
+        for (int element : source) {
+            unsortedArray.add(element);
+        }
+
+        assertThatThrownBy(() -> unsortedArray.get(index))
+                .isInstanceOf(IndexOutOfBoundsException.class)
+                .hasMessage("Index is out of bounds [size=%s, index=%s]".formatted(unsortedArray.size(), index));
     }
 }

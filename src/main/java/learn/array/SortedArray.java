@@ -75,18 +75,15 @@ public class SortedArray<T extends Comparable<T>> implements Array<T> {
     }
 
     @Override
+    public T get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of bounds [size=%s, index=%s]".formatted(size, index));
+        }
+        return (T) array[index];
+    }
+
+    @Override
     public String toString() {
-        if (size == 0) {
-            return "[]";
-        }
-        if (size == 1) {
-            return "[" + array[0] + "]";
-        }
-        StringBuilder result = new StringBuilder("[");
-        for (int i = 0; i < size - 1; ++i) {
-            result.append(array[i]).append(", ");
-        }
-        result.append(array[size - 1]).append("]");
-        return result.toString();
+        return string();
     }
 }

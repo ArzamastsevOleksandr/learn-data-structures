@@ -2,12 +2,14 @@ package array;
 
 import learn.array.Array;
 import learn.array.DynamicArray;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
@@ -47,6 +49,29 @@ public class DynamicArrayTest {
                 of(4, 4, new int[]{1, 2}, 3, "[1, 2]", 2, false),
                 of(2, 2, new int[]{1}, 3, "[1]", 1, false),
                 of(2, 2, new int[]{}, 3, "[]", 0, false)
+        );
+    }
+
+    public static Stream<Arguments> sourceAndGetByIndex() {
+        return Stream.of(
+                of(new int[]{1, 2, 3, 4, 5, 6}, 0, 1),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 1, 2),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 2, 3),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 3, 4),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 4, 5),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 5, 6)
+        );
+    }
+
+    public static Stream<Arguments> sourceAndGetByWrongIndex() {
+        return Stream.of(
+                of(new int[]{1, 2, 3, 4, 5, 6}, -1),
+                of(new int[]{1, 2, 3, 4, 5, 6}, -2),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 7),
+                of(new int[]{1, 2, 3, 4, 5, 6}, 8),
+                of(new int[]{}, 1),
+                of(new int[]{}, 0),
+                of(new int[]{}, -1)
         );
     }
 
@@ -90,5 +115,29 @@ public class DynamicArrayTest {
         assertThat(dynamicArray.toString()).isEqualTo(expectedToStringValue);
         assertThat(dynamicArray.size()).isEqualTo(expectedSize);
         assertThat(dynamicArray.capacity()).isEqualTo(resultingCapacity);
+    }
+
+    @ParameterizedTest
+    @MethodSource("sourceAndGetByIndex")
+    void getByIndex(int[] source, int index, int expectedValue) {
+        dynamicArray = new DynamicArray<>(initialCapacity);
+        for (int element : source) {
+            dynamicArray.add(element);
+        }
+
+        AssertionsForClassTypes.assertThat(dynamicArray.get(index)).isEqualTo(expectedValue);
+    }
+
+    @ParameterizedTest
+    @MethodSource("sourceAndGetByWrongIndex")
+    void getByIndexThrowsExceptionWhenIndexIsOutOfBounds(int[] source, int index) {
+        dynamicArray = new DynamicArray<>(initialCapacity);
+        for (int element : source) {
+            dynamicArray.add(element);
+        }
+
+        assertThatThrownBy(() -> dynamicArray.get(index))
+                .isInstanceOf(IndexOutOfBoundsException.class)
+                .hasMessage("Index is out of bounds [size=%s, index=%s]".formatted(dynamicArray.size(), index));
     }
 }
