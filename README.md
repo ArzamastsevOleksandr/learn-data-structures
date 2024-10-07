@@ -16,3 +16,7 @@ Implementations of the following data structures are present:
 ## Stack
 
 1. [Linked list based stack](src/main/java/learn/stack/LLStack.java)
+
+## Queue
+
+1. [Linked list based queue](src/main/java/learn/queue/LLQueue.java)

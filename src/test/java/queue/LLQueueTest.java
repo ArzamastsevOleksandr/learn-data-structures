@@ -1,6 +1,6 @@
 package queue;
 
-import learn.queue.LinkedListQueue;
+import learn.queue.LLQueue;
 import learn.queue.Queue;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -10,9 +10,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-public class LinkedListQueueTest {
+public class LLQueueTest {
 
-    private final Queue<Integer> queue = new LinkedListQueue<>();
+    private final Queue<Integer> queue = new LLQueue<>();
 
     public static Stream<Arguments> enqueueSourceAndDequeueResults() {
         return Stream.of(
